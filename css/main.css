@@ -419,6 +419,56 @@ body {
     margin-top: 25px;
 }
 
+/* Custom Score Input Section */
+.custom-score-section {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #444444;
+    display: flex;
+    gap: 8px;
+}
+
+.custom-score-input {
+    flex: 1;
+    padding: 8px 12px;
+    background-color: #1E1E1E;
+    border: 1px solid #444444;
+    border-radius: 6px;
+    color: #E0E0E0;
+    font-size: 13px;
+    transition: border-color 0.2s ease;
+}
+
+.custom-score-input:focus {
+    outline: none;
+    border-color: #4CAF50;
+}
+
+.custom-score-input::placeholder {
+    color: #666666;
+}
+
+/* Remove spinner arrows from number input */
+.custom-score-input::-webkit-inner-spin-button,
+.custom-score-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.custom-score-input[type=number] {
+    -moz-appearance: textfield;
+}
+
+.modal-body {
+    margin-bottom: 20px;
+}
+
+.modal-body p {
+    color: #A0A0A0;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
 /* ========== ANIMATIONS ========== */
 @keyframes fadeIn {
     from { opacity: 0; }

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Score Tracker</title>
+    <link rel="stylesheet" href="css/main.css">
+    <script src="js/main.js" defer></script>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2>Your Games</h2>
+            <p>Track and manage your games</p>
+        </div>
+        <div class="games-list" id="gamesList">
+            <!-- Games will be populated here by your JS -->
+        </div>
+        <button class="add-game-btn" onclick="enableModal('addGameModal')">+ Add New Game</button>
+        <button class="account-btn">Login</button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <header class="main-header">
+            <div class="welcome-section">
+                <div class="welcome-text">
+                    <h1>Welcome back, Kade! 👋</h1>
+                    <h2>Ready to track some scores?</h2>
+                </div>
+                <div class="stats-summary">
+                    <div class="stat-box">
+                        <div class="number" id="totalGames">0</div>
+                        <div class="label">Games</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="number" id="totalPlayers">0</div>
+                        <div class="label">Players</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="number" id="totalHours">100</div>
+                        <div class="label">Hours</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Game Display Area -->
+        <div class="game-display" id="gameDisplay">
+            <div class="empty-state">
+                <h2>No game selected</h2>
+                <p>Select a game from the sidebar or add a new one to get started</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Game Modal -->
+    <div class="modal" id="addGameModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Game</h2>
+            </div>
+            <div class="form-group">
+                <label>Game Name</label>
+                <input type="text" id="gameName" placeholder="Enter game name...">
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="disableModal('addGameModal')">Cancel</button>
+                <button class="btn btn-primary" id="gameName" onclick="addGame('gameName')">Add Game</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Player Modal -->
+    <div class="modal" id="addPlayerModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Player</h2>
+            </div>
+            <div class="form-group">
+                <label>Player Name</label>
+                <input type="text" id="playerName" placeholder="Enter player name...">
+            </div>
+            <div class="form-group">
+                <label>Initial Score</label>
+                <input type="number" id="playerScore" placeholder="Enter score..." value="0">
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary">Cancel</button>
+                <button class="btn btn-primary">Add Player</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

@@ -2,6 +2,15 @@ var games = [
 
 ]
 
+var savedGames = localStorage.getItem("games");
+
+if (savedGames) {
+    users = JSON.parse(savedGames);
+}
+
+var loggedInUser = null;
+loggedInAccount = localStorage.getItem("loggedInAccount");
+
 window.addEventListener('click', (e) => {
     if (e.target.classList.contains('modal')) {
         disableModal(e.target.id);
@@ -71,6 +80,8 @@ function addGame(gameButton) {
         name: gameName,
         players: []
     });
+
+    localStorage.setItem("games", JSON.stringify(games));
 
     document.getElementById(gameButton).value = "";
 }

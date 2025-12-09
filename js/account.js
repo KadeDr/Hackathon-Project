@@ -2,12 +2,21 @@ var errors = [];
 
 var loggedInAccount = null;
 
-var currentUserData = [
-    username = "",
-    email = "",
-    password = "",
-];
+loggedInAccount = localStorage.getItem("loggedInAccount");
+
+var currentUserData = {
+    username: "",
+    email: "",
+    password: "",
+};
 var users = [];
+
+// Load saved users from localStorage
+var savedUsers = localStorage.getItem("users");
+
+if (savedUsers) {
+    users = JSON.parse(savedUsers);
+}
 
 function handleLogin() {
     if (errors.length > 0) { return; }
@@ -59,6 +68,8 @@ function handleLogin() {
 
     loggedInAccount = currentUserData.username;
 
+    localStorage.setItem("loggedInAccount", currentUserData.username);
+
     displayError('errorMessage', 'Account credentials approved!');
 
     window.location.href = "index.html";
@@ -106,7 +117,6 @@ function handleEmailOrUsername(inputBoxId) {
 
 function handlePassword(inputBoxId) {
     var inputBoxText = document.getElementById(inputBoxId).value;
-    var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     var errorCodeFound = false;
 
@@ -137,16 +147,24 @@ function handlePassword(inputBoxId) {
         displayError('errorMessage', errors[errors.length - 1]);
     }
 
-    if (emailPattern.test(inputBoxText)) {
-        currentUserData.email = inputBoxText
-    } else {
-        currentUserData.username = inputBoxText;
-    }
+    currentUserData.password = inputBoxText;
 }
 
 function handleSignup() {
     if (errors.length > 0) {
         return;
+    }
+
+    for (var i= 0; i < users.length; i++) {
+        user = users[i];
+        if (currentUserData.username == user.username) {
+            displayError('errorMessage', 'Username already taken');
+            return;
+        }
+        if (currentUserData.email == user.email) {
+            displayError('errorMessage', 'Email already registered');
+            return;
+        }
     }
 
     var newUser = {
@@ -156,6 +174,8 @@ function handleSignup() {
     };
 
     users.push(newUser);
+    
+    localStorage.setItem("users", JSON.stringify(users));
 
     currentUserData.username = "";
     currentUserData.email = "";
@@ -198,6 +218,8 @@ function handleNewUser(inputBoxId) {
         return;
     }
 
+    currentUserData.username = inputBoxText;
+
     for (var i = 0; i < errors.length; i++) {
         if (errors[i] == 'emptyUsername' || errors[i] == 'Username cannot contain any special characters') {
             errors.splice(i, 1);
@@ -231,6 +253,8 @@ function handleNewEmail(inputBoxId) {
         displayError('errorMessage', 'Please enter a valid email address');
         return;
     }
+
+    currentUserData.email = inputBoxText;
 
     for (var i = 0; i < errors.length; i++) {
         if (errors[i] == 'Please enter a valid email address') {
@@ -309,6 +333,8 @@ function handleNewPassword(inputBoxId) {
         displayError('errorMessage', 'Password must contain at least one special character');
         return;
     }
+
+    currentUserData.password = inputBoxText;
 
     for (var i = 0; i < errors.length; i++) {
         if (errors[i] == 'Password must be at least 8 characters long' || errors[i] == 'Password must contain at least one uppercase letter' || errors[i] == 'Password must contain at least one number' || errors[i] == 'Password must contain at least one special character') {

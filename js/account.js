@@ -1,13 +1,165 @@
 var errors = [];
 
-function handleLogin() {
+var loggedInAccount = null;
 
+var currentUserData = [
+    username = "",
+    email = "",
+    password = "",
+];
+var users = [];
+
+function handleLogin() {
+    if (errors.length > 0) { return; }
+
+    var correctInformation = false;
+    var errorCodeFound = false;
+
+    // Check credientials
+    for (var i = 0; i < users.length; i++) {
+        if (currentUserData.username == users[i].username || currentUserData.email == users[i].email) {
+            if (currentUserData.password == users[i].password) {
+                correctInformation = true;
+                currentUserData.username = users[i].username;
+                currentUserData.email = users[i].email;
+                break;
+            }
+            correctInformation = false;
+            break;
+        }
+    }
+
+    // Check password
+    if (!correctInformation) {
+        for (var i = 0; i < errors.length; i++) {
+            if (errors[i] == 'Username, Email, or Password is incorrect.') {
+                errorCodeFound = true;
+            }
+        }
+
+        if (!errorCodeFound) {
+            errors.push('Username, Email, or Password is incorrect');
+        }
+
+        displayError('errorMessage', 'Username, Email, or Password is incorrect');
+        return;
+    }
+
+    for (var i = 0; i < errors.length; i++) {
+        if (errors[i] == 'Username, Email, or Password is incorrect') {
+            errors.splice(i, 1);
+        }
+    }
+
+    if (errors.length == 0) {
+        disableError('errorMessage');
+    } else {
+        displayError('errorMessage', errors[errors.length - 1]);
+    }
+
+    loggedInAccount = currentUserData.username;
+
+    displayError('errorMessage', 'Account credentials approved!');
+
+    window.location.href = "index.html";
+}
+
+function handleEmailOrUsername(inputBoxId) {
+    var inputBoxText = document.getElementById(inputBoxId).value;
+    var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    var errorCodeFound = false;
+
+    if (inputBoxText == "") {
+        for (var i = 0; i < errors.length; i++) {
+            if (errors[i] == 'Email or Username cannot be empty') {
+                errorCodeFound = true;
+            }
+        }
+
+        if (!errorCodeFound) {
+            errors.push('Email or Username cannot be empty');
+        }
+
+        displayError('errorMessage', 'Email or Username cannot be empty');
+        return;
+    }
+
+    for (var i = 0; i < errors.length; i++) {
+        if (errors[i] == 'Email or Username cannot be empty') {
+            errors.splice(i, 1);
+        }
+    }
+
+    if (errors.length == 0) {
+        disableError('errorMessage');
+    } else {
+        displayError('errorMessage', errors[errors.length - 1]);
+    }
+
+    if (emailPattern.test(inputBoxText)) {
+        currentUserData.email = inputBoxText
+    } else {
+        currentUserData.username = inputBoxText;
+    }
+}
+
+function handlePassword(inputBoxId) {
+    var inputBoxText = document.getElementById(inputBoxId).value;
+    var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    var errorCodeFound = false;
+
+    if (inputBoxText == "") {
+        for (var i = 0; i < errors.length; i++) {
+            if (errors[i] == 'Password cannot be empty') {
+                errorCodeFound = true;
+            }
+        }
+
+        if (!errorCodeFound) {
+            errors.push('Password cannot be empty');
+        }
+
+        displayError('errorMessage', 'Password cannot be empty');
+        return;
+    }
+
+    for (var i = 0; i < errors.length; i++) {
+        if (errors[i] == 'Password cannot be empty') {
+            errors.splice(i, 1);
+        }
+    }
+
+    if (errors.length == 0) {
+        disableError('errorMessage');
+    } else {
+        displayError('errorMessage', errors[errors.length - 1]);
+    }
+
+    if (emailPattern.test(inputBoxText)) {
+        currentUserData.email = inputBoxText
+    } else {
+        currentUserData.username = inputBoxText;
+    }
 }
 
 function handleSignup() {
     if (errors.length > 0) {
         return;
     }
+
+    var newUser = {
+        username: currentUserData.username,
+        email: currentUserData.email,
+        password: currentUserData.password
+    };
+
+    users.push(newUser);
+
+    currentUserData.username = "";
+    currentUserData.email = "";
+    currentUserData.password = "";
 }
 
 function handleNewUser(inputBoxId) {
@@ -51,8 +203,6 @@ function handleNewUser(inputBoxId) {
             errors.splice(i, 1);
         }
     }
-
-    console.log(errors);
 
     if (errors.length == 0) {
         disableError('errorMessage');

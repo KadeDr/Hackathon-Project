@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Score Tracker</title>
+    <title>Dashboard - Game Score Tracker</title>
     <link rel="stylesheet" href="css/main.css">
     <script src="js/main.js" defer></script>
 </head>
@@ -107,7 +107,22 @@
             </div>
             <div class="modal-actions">
                 <button class="btn btn-secondary" onclick="disableModal('deleteConfirmModal')">Cancel</button>
-                <button class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+                <button class="btn btn-danger" id="confirmDeleteBtn" onclick="confirmDelete()">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="deleteConfirmPlayerModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Delete Player</h2>
+            </div>
+            <div class="modal-body">
+                <p id="deleteMessage">Are you sure you want to delete this player? This cannot be undone.</p>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="disableModal('deleteConfirmPlayerModal')">Cancel</button>
+                <button class="btn btn-danger" id="confirmDeleteBtn" onclick="confirmDeletePlayer()">Delete</button>
             </div>
         </div>
     </div>

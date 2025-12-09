@@ -75,14 +75,11 @@ function addPlayer() {
     var playerName = document.getElementById('playerNameInput').value;
     var playerScore = document.getElementById('playerScore').value;
 
-    console.log(playerName);
-
     if (playerName === '') {
         alert('Please enter a player name');
         return;
     }
 
-    // Find the currently open game
     var currentGameName = document.querySelector('.game-title h1').textContent;
     var currentGame = null;
 
@@ -98,13 +95,11 @@ function addPlayer() {
         return;
     }
 
-    // Add player to the game's players array
     currentGame.players.push({
         name: playerName,
         score: parseInt(playerScore)
     });
 
-    // Create player card
     var playerCard = document.createElement('div');
     playerCard.className = 'player-card';
     playerCard.innerHTML = `
@@ -113,27 +108,24 @@ function addPlayer() {
         <div class="player-score">${playerScore}</div>
     </div>
     <div class="player-actions">
-        <button class="btn btn-primary btn-small" onclick="addScore('${playerName}', '10', '')">+10</button>
-        <button class="btn btn-secondary btn-small">-10</button>
-        <button class="btn btn-danger btn-small">Delete</button>
+        <button class="btn btn-primary btn-small" onclick="addScore('${playerName}', 10, '${currentGameName}')">+10</button>
+        <button class="btn btn-secondary btn-small" onclick="addScore('${playerName}', -10, '${currentGameName}')">-10</button>
+        <button class="btn btn-danger btn-small" onclick="deletePlayer('${playerName}', '${currentGameName}')">Delete</button>
     </div>
     <div class="custom-score-section">
-        <input type="number" class="custom-score-input" placeholder="Custom amount">
-        <button class="btn btn-primary btn-small">Add</button>
+        <input type="number" class="custom-score-input" placeholder="Custom amount" id="custom-${playerName}">
+        <button class="btn btn-primary btn-small" onclick="addCustomScore('${playerName}', '${currentGameName}')">Add</button>
     </div>
 `;
 
-    // Add to the players grid
     var playersGrid = document.getElementById('playersGrid');
     playersGrid.appendChild(playerCard);
 
-    // Update the player count in the game item
     var gameItem = document.getElementById(currentGameName);
     if (gameItem) {
         gameItem.querySelector('p').textContent = currentGame.players.length + ' Players';
     }
 
-    // Clear inputs and close modal
     document.getElementById('playerNameInput').value = '';
     document.getElementById('playerScore').value = '0';
     disableModal('addPlayerModal');
@@ -141,12 +133,12 @@ function addPlayer() {
     console.log(games);
 }
 
+var currentGame = null;
+
 function openGame(gameName) {
     console.log("Opening game:", gameName);
     const gameDisplay = document.getElementById('gameDisplay');
     var players = []
-
-    console.log(games);
 
     for (var i = 0; i < games.length; i++) {
         if (games[i].name == gameName) {
@@ -170,27 +162,52 @@ function openGame(gameName) {
         <div class="players-section">
             <h2 class="section-title">Players & Scores</h2>
             <div class="players-grid" id="playersGrid">
-                <!-- Your player cards here -->
             </div>
         </div>
     `;
+
+    currentGame = gameName;
+
+    // Render existing players
+    renderPlayers(gameName, players);
+}
+
+function renderPlayers(gameName, players) {
+    var playersGrid = document.getElementById('playersGrid');
+    playersGrid.innerHTML = '';
+
+    players.forEach(function (player) {
+        var playerCard = document.createElement('div');
+        playerCard.className = 'player-card';
+        playerCard.innerHTML = `
+        <div class="player-header">
+            <div class="player-name">${player.name}</div>
+            <div class="player-score">${player.score}</div>
+        </div>
+        <div class="player-actions">
+            <button class="btn btn-primary btn-small" onclick="addScore('${player.name}', 10, '${gameName}')">+10</button>
+            <button class="btn btn-secondary btn-small" onclick="addScore('${player.name}', -10, '${gameName}')">-10</button>
+            <button class="btn btn-danger btn-small" onclick="deletePlayer('${player.name}', '${gameName}')">Delete</button>
+        </div>
+        <div class="custom-score-section">
+            <input type="number" class="custom-score-input" placeholder="Custom amount" id="custom-${player.name}">
+            <button class="btn btn-primary btn-small" onclick="addCustomScore('${player.name}', '${gameName}')">Add</button>
+        </div>
+        `;
+        playersGrid.appendChild(playerCard);
+    });
 }
 
 function deleteGame(gameID) {
-    var confirmationModal = document.getElementById('deleteConfirmModal');
-    confirmationModal.addEventListener("click", function() {
-        confirmDelete(gameID);
-    });
-
     enableModal('deleteConfirmModal');
 }
 
-function confirmDelete(gameID) {
-    var gameHTML = document.getElementById(gameID)
+function confirmDelete() {
+    var gameHTML = document.getElementById(currentGame)
     gameHTML.remove();
 
     for (var i = 0; i < games.length; i++) {
-        if (games[i].name == gameID) {
+        if (games[i].name == currentGame) {
             games.splice(i, 1);
             break;
         }
@@ -207,31 +224,62 @@ function confirmDelete(gameID) {
 }
 
 function addScore(playerName, value, gameName) {
-    // If value is 0, it means we need to get it from the custom input
-    if (value === 0) {
-        // This will be handled by a different approach - see below
-        return;
-    }
+    value = parseInt(value);
 
-    // Find the game and update the player's score
     for (var i = 0; i < games.length; i++) {
-        if (games[i].name === gameName) {  // ✅ Changed = to ===
+        if (games[i].name === gameName) {
             for (var j = 0; j < games[i].players.length; j++) {
-                if (games[i].players[j].name === playerName) {  // ✅ Changed == to === and added .name
-                    games[i].players[j].score = games[i].players[j].score + value;  // ✅ Changed == to = and .value to .score
-                    
-                    // Update the HTML - find the player card and update the score display
+                if (games[i].players[j].name === playerName) {
+                    games[i].players[j].score = games[i].players[j].score + value;
+
                     var playerCards = document.querySelectorAll('.player-card');
-                    playerCards.forEach(function(card) {
+                    playerCards.forEach(function (card) {
                         var cardName = card.querySelector('.player-name').textContent;
                         if (cardName === playerName) {
                             card.querySelector('.player-score').textContent = games[i].players[j].score;
                         }
                     });
-                    
+
                     return;
                 }
             }
         }
     }
+}
+
+function addCustomScore(playerName, gameName) {
+    var customInput = document.getElementById('custom-' + playerName);
+    var value = parseInt(customInput.value);
+
+    if (isNaN(value) || value === 0) {
+        return;
+    }
+
+    addScore(playerName, value, gameName);
+    customInput.value = '';
+}
+
+var playerToDelete = null;
+
+function deletePlayer(playerName, gameName) {
+    playerToDelete = playerName;
+    enableModal('deleteConfirmPlayerModal');
+}
+
+function confirmDeletePlayer() {
+    for (var i = 0; i < games.length; i++) {
+        if (games[i].name === currentGame) {
+            for (var j = 0; j < games[i].players.length; j++) {
+                if (games[i].players[j].name === playerToDelete) {
+                    games[i].players.splice(j, 1);
+                    break;
+                }
+            }
+            break;
+        }
+    }
+
+    // Re-render the game to update the display
+    openGame(currentGame);
+    disableModal('deleteConfirmPlayerModal');
 }

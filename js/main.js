@@ -29,6 +29,10 @@ window.addEventListener('keydown', (e) => {
     }
 });
 
+function redirectUser(link) {
+    window.location.href = link;
+}
+
 function enableModal(modalID) {
     var modal = document.getElementById(modalID);
     modal.classList.add('active');

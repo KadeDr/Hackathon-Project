@@ -1,6 +1,7 @@
 <!-- LOGIN PAGE (login.html) -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <link rel="stylesheet" href="css/auth.css">
     <script src="js/account.js" defer></script>
 </head>
+
 <body>
     <div class="auth-container">
         <div class="auth-box">
@@ -15,35 +17,44 @@
                 <h1>Welcome Back!</h1>
                 <p>Sign in to continue tracking your games</p>
             </div>
-            
+
             <div class="error-message" id="errorMessage"></div>
-            
+
             <form class="auth-form" id="loginForm">
                 <div class="form-group">
                     <label>Email or Username</label>
-                    <input type="text" id="loginEmail" placeholder="Enter your email or username" onchange="handleEmailOrUsername('loginEmail')" required>
+                    <input type="text" id="loginEmail" placeholder="Enter your email or username"
+                        onchange="handleEmailOrUsername('loginEmail')" required>
                 </div>
-                
+
                 <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="loginPassword" placeholder="Enter your password" onchange="handlePassword('loginPassword')" required>
+                    <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom:5px;">
+                        <label for="loginPassword">Password</label>
+                        <label class="checkbox-container"
+                            style="display:flex; align-items:center; gap:5px; font-weight:normal; cursor:pointer;">
+                            <span>Show Password</span>
+                            <input type="checkbox" id="showPassword" onclick="togglePassword('loginPassword', this)">
+                        </label>
+                    </div>
+                    <input type="password" id="loginPassword" placeholder="Enter your password"
+                        onchange="handlePassword('loginPassword')" required>
                 </div>
-                
-                <div class="form-options">
-                    <label class="checkbox-container">
-                        <input type="checkbox" id="rememberMe">
-                        <span>Remember me</span>
-                    </label>
-                    <a href="#" class="link">Forgot password?</a>
-                </div>
-                
+
+
+
                 <button type="button" class="btn btn-primary btn-full" onclick="handleLogin()">Sign In</button>
+
+                <!-- NEW GUEST LOGIN OPTION -->
+                <button type="button" class="btn btn-secondary btn-full"
+                    style="margin-top:10px; background-color:#2C2C2C; color:#81C784; border:2px solid #81C784;"
+                    onclick="redirectUser('index.html')">Use Without an Account</button>
             </form>
-            
+
             <div class="auth-footer">
                 <p>Don't have an account? <a href="signup.html" class="link">Sign up here</a></p>
             </div>
         </div>
     </div>
 </body>
+
 </html>

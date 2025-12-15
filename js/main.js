@@ -11,7 +11,7 @@
 
 // Main games array - stores all game objects with nested player arrays
 // Structure: [{name: "GameName", players: [{name: "Player", score: 0}]}]
-var games = []
+var games = [];
 
 // Get logged in user or default to guest account
 // Guest account uses reserved name that can't be registered
